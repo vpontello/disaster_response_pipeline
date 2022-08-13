@@ -136,14 +136,14 @@ def evaluate_model(cv,y_test,y_pred,algorithm):
     performance = {
         'algorithm':algorithm,
         'best_params':cv.best_params_,
-        'class':classification_reports,
-        'f1_scores':d_f1_score
+        'class':classification_reports
     }
     # definig a patch filename with the base algorithm from the model
-    patch = '../data/03_models/out/'
+    patch = '../../data/03_models/out/'
     filename = patch + algorithm
     # saving the model`s performance
-    json.dump(performance, open(filename+'_results.json', 'w'))
+    with open(filename+'_results.json', 'w') as fp:
+        json.dump(performance,fp) 
     return d_f1_score
 
 def comparing_models(performances_f1):
@@ -160,7 +160,7 @@ def comparing_models(performances_f1):
         df_performance[col] = df_performance[col].apply(lambda x : x[-1])
     # Defining the patch where the results are going to be stored
     print('____________________________________________________________________________')
-    print(f'it seams the model {df_performance.mean().sort_values().index[0]} has the best overall performance')
+    print(f'it seams the model {df_performance.mean().sort_values().index[-1]} has the best overall performance')
     print(df_performance.mean())
     print('____________________________________________________________________________')
     # saving output to a csv file
@@ -174,7 +174,7 @@ def save_model(model, algorithm):
     This funciton saves the model into the desired patch folder and with the name of the algorithm
     '''
     # define file path name with the base algorithm from the model
-    patch = '../data/03_models/out/'
+    patch = '../../data/03_models/out/'
     filename = patch + algorithm
 
     print(f'saving model into {filename}')
@@ -183,14 +183,14 @@ def save_model(model, algorithm):
 
 
 def main():
-    if len(sys.argv) == 2:
-        database_filepath = sys.argv[1:]
+    if len(sys.argv) == 3:
+        database_filepath, params_filename = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, y = load_data('../../data/02_trusted/'+database_filepath)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
         # reading the training parameters for grid search
-        with open('../data/03_models/in/params.json') as json_file:
+        with open(f'../../data/03_models/in/{params_filename}') as json_file:
             parameters = json.load(json_file)
             for key_1, value_1 in parameters.items():
                 for key_2, value_2 in value_1.items():
@@ -224,9 +224,9 @@ def main():
 
     else:
         print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py DisasterResponse.db LGBMClassifier.pkl')
+              'as the first argument and the filepath of grid search parameters '\
+              'JSON file to train the models as second argument. \n\nExample: python '\
+              'train_classifier.py DisasterResponse.db params.json')
 
 
 if __name__ == '__main__':

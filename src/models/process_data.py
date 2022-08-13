@@ -46,7 +46,7 @@ def clean_data(df):
 def save_data(df, database_filename='disaster.db'):
     'saving the data in a SQLite DB'
     # create SQLite DB
-    conn = sqlite3.connect('../data/02_trusted/'+database_filename)
+    conn = sqlite3.connect('../../data/02_trusted/'+database_filename)
     # export clean dataset to SQLite
     df.to_sql('messages_dataset',con=conn,if_exists='replace')
 
