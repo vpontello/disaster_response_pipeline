@@ -8,7 +8,7 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+import joblib
 from sqlalchemy import create_engine
 
 
@@ -26,11 +26,11 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../../data/disaster.db')
+engine = create_engine('sqlite:///../../data/02_trusted/DisasterResponse.db')
 df = pd.read_sql_table('messages_dataset', engine)
 
 # load model
-model = joblib.load("../../models/out/LGBMClassifier.pkl")
+model = joblib.load("../../data/03_models/out/LGBMClassifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
