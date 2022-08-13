@@ -1,6 +1,6 @@
 {
-"LGBMClassifier":{"clf__estimator__subsample": "[0.8]",
-                "clf__estimator__n_estimators": "[100]"},
-"XGBClassifier":{"clf__estimator__subsample": "[0.8]",
-                "clf__estimator__n_estimators": "[100]"}
+"LGBMClassifier":{"clf__estimator__subsample": "[0.5, 0.8, 1.0]",
+                  "clf__estimator__n_estimators": "[50, 100, 200]"},
+"XGBClassifier":{"clf__estimator__subsample": "[0.5, 0.8, 1.0]",
+                 "clf__estimator__n_estimators": "[50, 100, 200]"}
 }
