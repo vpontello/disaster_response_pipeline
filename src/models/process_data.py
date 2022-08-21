@@ -25,8 +25,16 @@ def clean_data(df):
     # rename the columns of `categories`
     df_expanded_cetegories.columns = categories_cols
     # set each value to be the last character of the string and convert column from string to numeric
+    def set_binary(s):
+        '''auxiliary function to make sure that the values are either 0 or 1. 
+        input: string with volumn and value, output: binary value'''
+        val = int(s.split('-')[-1])
+        if val > 1:
+            val = 1
+        return val
+
     for col in categories_cols:
-        df_expanded_cetegories[col] = df_expanded_cetegories[col].apply(lambda s: int(s.split('-')[-1]))
+        df_expanded_cetegories[col] = df_expanded_cetegories[col].apply(set_binary)
 
     # concatenate the extracted and cleaned categories with the former dataset
     df = pd.concat([df, df_expanded_cetegories], axis=1)
