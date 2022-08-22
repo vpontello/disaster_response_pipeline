@@ -1,6 +1,7 @@
 import json
 import plotly
 import pandas as pd
+import numpy as np
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -27,7 +28,7 @@ def tokenize(text):
 
 # load data
 engine = create_engine('sqlite:///../../data/02_trusted/DisasterResponse.db')
-df = pd.read_sql_table('messages_dataset', engine)
+df = pd.read_sql_table('messages_dataset', engine, index_col='index')
 
 # load model
 model = joblib.load("../../data/03_models/out/LGBMClassifier.pkl")
@@ -39,12 +40,16 @@ model = joblib.load("../../data/03_models/out/LGBMClassifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+    df_types = df.drop(['id','message','original','genre'], axis=1)
+    df_types_ = np.mean(df_types)*100
+    types_percentage = df_types_.values
+    types_names = df_types_.index
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+
     graphs = [
         {
             'data': [
@@ -61,6 +66,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=types_names,
+                    y=types_percentage
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Emergency Types',
+                'yaxis': {
+                    'title': "Types percentage"
+                },
+                'xaxis': {
+                    'title': "Types"
                 }
             }
         }
